@@ -17,11 +17,12 @@ A new flutter plugin project.
   s.public_header_files = 'Classes/**/*.h'
   s.dependency 'Flutter'
 
-  s.dependency 'sqlite3', '~> 3.32.3'
-  s.dependency 'sqlite3/fts5'
-  s.dependency 'sqlite3/json1'
-  s.dependency 'sqlite3/perf-threadsafe'
-  s.dependency 'sqlite3/rtree'
+  s.dependency 'SQLite.swift'
+  # s.dependency 'sqlite3', '~> 3.32.3'
+  # s.dependency 'sqlite3/fts5'
+  # s.dependency 'sqlite3/json1'
+  # s.dependency 'sqlite3/perf-threadsafe'
+  # s.dependency 'sqlite3/rtree'
 
   s.platform = :ios, '8.0'
 
