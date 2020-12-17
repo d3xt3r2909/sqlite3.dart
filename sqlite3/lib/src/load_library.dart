@@ -44,7 +44,18 @@ DynamicLibrary _defaultOpen() {
     }
   }
   if (Platform.isIOS) {
-    return DynamicLibrary.process();
+    try {
+      return DynamicLibrary.open('sqlite3.framework/sqlite3');
+      // Ignoring the error because its the only way to know if it was sucessful
+      // or not...
+      // ignore: avoid_catching_errors
+    } on ArgumentError catch (_) {
+      // In an iOS app without sqlite3_flutter_libs this falls back to using the version provided by iOS.
+      // This version is different for each iOS release.
+      //
+      // When using sqlcipher_flutter_libs this falls back to the version provided by the SQLCipher pod.
+      return DynamicLibrary.process();
+    }
   }
   if (Platform.isMacOS) {
     return DynamicLibrary.open('/usr/lib/libsqlite3.dylib');
@@ -67,12 +78,12 @@ DynamicLibrary _defaultOpen() {
 /// [overrideForAll].
 class OpenDynamicLibrary {
   final Map<OperatingSystem, OpenLibrary> _overriddenPlatforms = {};
-  OpenLibrary _overriddenForAll;
+  OpenLibrary? _overriddenForAll;
 
   OpenDynamicLibrary._();
 
   /// Returns the current [OperatingSystem] as read from the [Platform] getters.
-  OperatingSystem get os {
+  OperatingSystem? get os {
     if (Platform.isAndroid) return OperatingSystem.android;
     if (Platform.isLinux) return OperatingSystem.linux;
     if (Platform.isIOS) return OperatingSystem.iOS;
@@ -86,8 +97,9 @@ class OpenDynamicLibrary {
   /// [DynamicLibrary.lookup] sqlite's methods that will be used. This method is
   /// meant to be called by `moor_ffi` only.
   DynamicLibrary openSqlite() {
-    if (_overriddenForAll != null) {
-      return _overriddenForAll();
+    final forAll = _overriddenForAll;
+    if (forAll != null) {
+      return forAll();
     }
 
     final forPlatform = _overriddenPlatforms[os];

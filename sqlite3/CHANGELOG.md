@@ -1,3 +1,16 @@
+## 0.1.9-nullsafety.2
+
+- Fix loading sqlite3 on iOS
+
+## 0.1.9-nullsafety.1
+
+- Migrate package to null safety
+
+## 0.1.8
+
+- Added the `mutex` parameter to control the serialization mode
+  when opening databases.
+
 ## 0.1.7
 
 - Expose the `sqlite3_temp_directory` global variable
